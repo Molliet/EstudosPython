@@ -1,0 +1,32 @@
+import cv2
+import numpy as np
+
+# Carregar a imagem
+image = cv2.imread('caminho_para_sua_imagem.jpg')
+
+# Converter para escala de cinza
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Aplicar blur (opcional)
+gray = cv2.GaussianBlur(gray, (5, 5), 0)
+
+# Detectar as bordas
+edges = cv2.Canny(gray, 50, 150, apertureSize=3)
+
+# Encontrar contornos
+contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+for cnt in contours:
+    # Aproximar o contorno para um polígono
+    epsilon = 0.05 * cv2.arcLength(cnt, True)
+    approx = cv2.approxPolyDP(cnt, epsilon, True)
+    
+    # Verificar se é um retângulo/quadrado (4 vértices)
+    if len(approx) == 4:
+        # Desenhar o contorno encontrado
+        cv2.drawContours(image, [approx], 0, (0, 255, 0), 3)
+
+# Mostrar a imagem
+cv2.imshow('Retangulos Identificados', image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
