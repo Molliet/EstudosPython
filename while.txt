@@ -1,0 +1,33 @@
+
+###### leia com atenção!!! este código roda em sua máquina local.
+
+import numpy as np
+import cv2
+
+#carrega o video 
+cap = cv2.VideoCapture('people-walking.mp4')
+
+# Cria a subtração do fundo
+#fgbg = cv2.createBackgroundSubtractorMOG2()
+fgbg = cv2.createBackgroundSubtractorKNN()
+
+while(1):
+    ret, frame = cap.read()
+    
+    if not ret:
+        break
+    
+    # Aplica a mascara no frame recebido
+    fgmask = fgbg.apply(frame)
+   
+   cv2.imshow('fgmask',frame)
+    cv2.imshow('frame',fgmask)
+
+    
+    k = cv2.waitKey(30) & 0xff
+    if k == 27:
+        break
+    
+
+cap.release()
+cv2.destroyAllWindows()
