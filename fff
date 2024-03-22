@@ -1,0 +1,29 @@
+import cv2
+import numpy as np
+
+# Função para encontrar os maiores contornos em uma imagem
+def find_largest_areas(image_path, top_n=1):
+    # Carregar a imagem
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+    # Aplicar um threshold ou Canny edge detection
+    _, thresh = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
+
+    # Encontrar contornos
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Calculando a área de cada contorno encontrado
+    contour_areas = [(cnt, cv2.contourArea(cnt)) for cnt in contours]
+
+    # Ordenar contornos pela área, do maior para o menor
+    sorted_contours = sorted(contour_areas, key=lambda x: x[1], reverse=True)
+
+    # Selecionar os 'top_n' maiores contornos
+    largest_contours = sorted_contours[:top_n]
+
+    return [(cnt, area) for cnt, area in largest_contours]
+
+# Substitua 'caminho_para_imagem.png' pelo caminho real até sua imagem
+# Chamada da função para encontrar os maiores contornos
+largest_areas = find_largest_areas('caminho_para_imagem.png', top_n=3)
+largest_areas  # Esta lista contém os contornos e as áreas dos 'top_n' maiores contornos
